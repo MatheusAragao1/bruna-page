@@ -106,7 +106,7 @@ async function handleSubmit(event) {
   showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
 
   // Reset form
-  contactForm.reset();
+  form.reset();
 }
 form.addEventListener("submit", handleSubmit);
 
