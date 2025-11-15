@@ -6,12 +6,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (target) {
       const navHeight = document.querySelector('.navbar').offsetHeight;
       const targetPosition = target.offsetTop - navHeight;
-      
+
       window.scrollTo({
         top: targetPosition,
         behavior: 'smooth'
       });
-      
+
       // Close mobile menu if open
       const navbarCollapse = document.querySelector('.navbar-collapse');
       if (navbarCollapse.classList.contains('show')) {
@@ -28,13 +28,13 @@ const navbar = document.getElementById('mainNav');
 
 window.addEventListener('scroll', () => {
   const currentScroll = window.pageYOffset;
-  
+
   if (currentScroll > 100) {
     navbar.classList.add('scrolled');
   } else {
     navbar.classList.remove('scrolled');
   }
-  
+
   lastScroll = currentScroll;
 });
 
@@ -63,16 +63,16 @@ const navLinks = document.querySelectorAll('.nav-link');
 window.addEventListener('scroll', () => {
   let current = '';
   const scrollPosition = window.pageYOffset + 200;
-  
+
   sections.forEach(section => {
     const sectionTop = section.offsetTop;
     const sectionHeight = section.offsetHeight;
-    
+
     if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
       current = section.getAttribute('id');
     }
   });
-  
+
   navLinks.forEach(link => {
     link.classList.remove('active');
     if (link.getAttribute('href') === `#${current}`) {
@@ -82,39 +82,38 @@ window.addEventListener('scroll', () => {
 });
 
 // Form Submission Handler
-const contactForm = document.getElementById('contactForm');
+var form = document.getElementById("my-form");
 
-contactForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  // Get form values
-  const nome = document.getElementById('nome').value;
-  const email = document.getElementById('email').value;
-  const telefone = document.getElementById('telefone').value;
-  const mensagem = document.getElementById('mensagem').value;
-  
-  // Form validation
-  if (!nome || !email || !telefone || !mensagem) {
-    showNotification('Por favor, preencha todos os campos.', 'error');
-    return;
-  }
-  
-  // Email validation
+async function handleSubmit(event) {
+  event.preventDefault();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const email = document.getElementById('email').value;
   if (!emailRegex.test(email)) {
     showNotification('Por favor, insira um e-mail válido.', 'error');
     return;
   }
-  
-  // Success message
-  showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
-  
-  // Reset form
-  contactForm.reset();
-  
-  // In a real application, you would send the data to a server here
-  // Example: sendToServer({ nome, email, telefone, mensagem });
-});
+  var status = document.getElementById("my-form-status");
+  var data = new FormData(form);
+
+  fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      // Success message
+      showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
+
+      // Reset form
+      contactForm.reset();
+    }
+  }).catch(error => {
+    showNotification('Mensagem não enviada! Entre em contato via whatsapp.', 'error');
+  });
+}
+form.addEventListener("submit", handleSubmit);
 
 // Notification Function
 function showNotification(message, type) {
@@ -125,7 +124,7 @@ function showNotification(message, type) {
     <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
     <span>${message}</span>
   `;
-  
+
   // Style the notification
   notification.style.cssText = `
     position: fixed;
@@ -145,7 +144,7 @@ function showNotification(message, type) {
     animation: slideIn 0.5s ease-out;
     max-width: 400px;
   `;
-  
+
   // Add animation styles
   if (!document.getElementById('notification-styles')) {
     const style = document.createElement('style');
@@ -174,10 +173,10 @@ function showNotification(message, type) {
     `;
     document.head.appendChild(style);
   }
-  
+
   // Add to page
   document.body.appendChild(notification);
-  
+
   // Remove after 5 seconds
   setTimeout(() => {
     notification.style.animation = 'slideOut 0.5s ease-out';
@@ -216,7 +215,7 @@ const telefoneInput = document.getElementById('telefone');
 
 telefoneInput.addEventListener('input', (e) => {
   let value = e.target.value.replace(/\D/g, '');
-  
+
   if (value.length > 0) {
     if (value.length <= 2) {
       value = `(${value}`;
@@ -228,7 +227,7 @@ telefoneInput.addEventListener('input', (e) => {
       value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
     }
   }
-  
+
   e.target.value = value;
 });
 
@@ -244,7 +243,7 @@ if ('IntersectionObserver' in window) {
       }
     });
   });
-  
+
   const images = document.querySelectorAll('img[data-src]');
   images.forEach(img => imageObserver.observe(img));
 }
