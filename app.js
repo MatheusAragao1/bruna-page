@@ -92,26 +92,21 @@ async function handleSubmit(event) {
     showNotification('Por favor, insira um e-mail válido.', 'error');
     return;
   }
-  var status = document.getElementById("my-form-status");
   var data = new FormData(form);
 
-  fetch(form.action, {
+  await fetch(form.action, {
     method: form.method,
     body: data,
     headers: {
       'Accept': 'application/json'
     }
-  }).then(response => {
-    if (response.ok) {
-      // Success message
-      showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
-
-      // Reset form
-      contactForm.reset();
-    }
-  }).catch(error => {
-    showNotification('Mensagem não enviada! Entre em contato via whatsapp.', 'error');
   });
+
+  // Success message
+  showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
+
+  // Reset form
+  contactForm.reset();
 }
 form.addEventListener("submit", handleSubmit);
 
